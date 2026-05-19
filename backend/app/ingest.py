@@ -34,7 +34,7 @@ def ingest():
             persist_directory=CHROMA_DIR,
         )
 
-        print("CV Saved Successfully ✅")
+        print("CV indexed successfully ✅")
 
     except Exception as e:
         print(f"An error occurred: {e}")
