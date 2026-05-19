@@ -1,7 +1,7 @@
 # Ask My CV
 
-A RAG chatbot that answers questions about your CV/resume, built with LangChain and FastAPI.
-Drop in your PDF, add your OpenAI key, and get a chat widget you can embed in any website.
+A RAG chatbot API that answers questions about your CV/resume, built with LangChain and FastAPI.
+Drop in your PDF, add your OpenAI key, and query it from any frontend or client.
 
 ## How It Works
 
@@ -17,12 +17,10 @@ LangChain RAG chain
   └── OpenAI LLM          →  generates an answer from those chunks
      │
      ▼
-JSON response  →  frontend widget displays the answer
+JSON response
 ```
 
 ## Quick Start
-
-### Backend
 
 ```bash
 cd backend/
@@ -33,16 +31,21 @@ python -m app.ingest        # index your CV (run once)
 uvicorn app.main:app --reload --port 8000
 ```
 
-### Frontend widget
+## API Endpoints
 
-Embed the chatbot on any HTML page:
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Returns `{"status": "ok"}` — confirms the server is running |
+| `POST` | `/chat` | Accepts `{"question": "..."}` and returns `{"answer": "..."}` |
 
-```html
-<link rel="stylesheet" href="path/to/chatbot.css" />
-<script src="path/to/chatbot.js"></script>
+**Example:**
+```bash
+curl -X POST http://localhost:8000/chat \
+     -H "Content-Type: application/json" \
+     -d '{"question": "What are your technical skills?"}'
 ```
 
-The widget appears as a floating button in the bottom-right corner.
+Interactive docs available at `http://localhost:8000/docs` when the server is running.
 
 ## Repository Structure
 
@@ -60,11 +63,6 @@ ask_my_cv/
 │   ├── requirements.txt
 │   ├── .env.example
 │   └── README.md
-│
-├── frontend-widget/
-│   ├── chatbot.js          # embeddable widget (vanilla JS)
-│   └── chatbot.css         # widget styles
-│
 └── README.md
 ```
 
@@ -84,5 +82,4 @@ Copy `backend/.env.example` to `backend/.env` and fill in your values.
 
 - **System prompt**: edit `backend/app/prompts.py` to change how the bot introduces itself.
 - **Chunk size**: tune `chunk_size` and `chunk_overlap` in `ingest.py` for better retrieval.
-- **Model**: change `model` in `rag.py` (e.g. `gpt-4o` for higher quality answers).
-- **Widget style**: edit `frontend-widget/chatbot.css` to match your portfolio's design.
+- **Model**: change `MODEL_NAME` in `.env` to use a different OpenAI model.
